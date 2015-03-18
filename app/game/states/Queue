@@ -1,0 +1,81 @@
+Hide.Queue = function (game) {
+	this.socket = io();
+	this.game = game;
+	this.i = -120;
+	this.selected = false;
+};
+
+Hide.Queue.prototype  = {
+
+
+	preload : function () {
+		this.game.load.script('gray', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Gray.js');
+		
+		this.selectGroup = this.add.group();
+		this.selectedGroup = this.add.group();
+		
+		this.select('fed');
+		this.select('joe');
+		this.select('kim');
+		this.select('hit');
+		this.select('bin');	
+	},
+	create : function () {
+	  this.style = { font: '65px Arial', fill: '#ffffff', align: 'center'};
+      this.titleText = this.game.add.text(this.game.world.centerX, 50, 'HIDE!', this.style);
+      	this.titleText.anchor.setTo(0.5, 0.5);
+
+      this.gameInput = this.game.add.text(this.game.world.centerX, 150, 'Select one of the character below ', { font: '16px Arial', fill: '#ffffff', align: 'center'});
+      	this.gameInput.anchor.setTo(0.5, 0.5);
+
+      this.msg = this.socket.on('new:connection', function(data){ return data;});
+	  	this.countText = this.game.add.text(this.game.world.centerX, 310, this.msg.id + ' is online!',  { font: '12px Arial', fill: '#71BF40', align: 'center'});
+  	  		this.countText.anchor.setTo(0.5, 0.5);
+
+  	  this.newGameText = this.game.add.text(this.game.world.centerX, 380,'start new game',  { font: '12px Arial', fill: '#71BF40', align: 'center'});
+  	  	this.newGameText.anchor.setTo(0.5, 0.5);
+  	  		this.newGameText.inputEnabled = true;
+	  
+	},
+	update : function () {
+		this.socket.on('start:game',this.startgame);
+	},
+	characterSelec : function (sprite, pointer) {
+		if(!this.selected){
+			this.selectedGroup.add(sprite);
+			this.selectGroup.remove(sprite);
+
+			var gray = this.game.add.filter('Gray');
+			this.selectGroup.filters = [gray];
+			this.selectGroup.forEach(function(character) {
+				character.inputEnabled = false;
+			});
+
+			Hide.characterid = {x:50,y:100,avatar: sprite.key};
+			this.socket.emit('new:player',{x:50,y:100,avatar: sprite.key});
+			this.state.start('game');
+			this.selected = true;
+		}
+		else{
+			this.selected = false;
+			this.selectGroup.add(sprite);
+			this.selectedGroup.remove(sprite);
+			this.selectGroup.filters = [null];
+			this.selectGroup.forEach(function(character) {
+				character.inputEnabled = true;
+			});
+		}
+	},
+	select: function(avatar){
+		this.character = this.add.sprite( this.game.world.centerX+(this.i), 200, avatar);
+			this.character.anchor.setTo(0.5, 0.5);
+				this.character.inputEnabled = true;		
+					this.character.events.onInputDown.add(this.characterSelec, this);
+						this.selectGroup.add(this.character);
+							this.i= this.i+60;		
+	},
+	startgame: function (){
+		this.state.start('game');
+	}
+
+};

@@ -1,0 +1,19 @@
+<div id="game">
+		<script>
+					$(document).ready(function() {
+               function Game() {}
+                Game.prototype = {
+                    start: function() {
+                      var game = new Phaser.Game(600,400, Phaser.AUTO,'game');
+                      game.state.add('boot', Hide.Boot);
+                      game.state.add('preload', Hide.Preloader);
+                      game.state.add('lobby', Hide.Lobby);
+                      game.state.add('game', Hide.Game);
+                      game.state.start('boot');
+                    }
+                };
+              var game = new Game();
+              game.start();
+          });
+		</script>
+</div>
