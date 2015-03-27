@@ -23,6 +23,39 @@ body {
   line-height: 40px;
   padding-bottom: 19px;
 }
+/* nav */
+#nav{
+  list-style: none;
+  float: right;
+}
+  #nav li{
+    display: inline-block;
+    padding-left:15px; 
+  }
+    #nav li a{
+      color: #000;
+    }
+
+/* about section*/
+.team {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  min-height: 800px;
+}
+
+.person {
+  float: left;
+  padding: 30px;
+  margin: 0 auto; 
+  list-style: none;
+  display: inline-block;
+}
+
+.person img {
+	width: 140px;
+	height: 140px;
+}
 
 /* Custom page footer */
 .footer {

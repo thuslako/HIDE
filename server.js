@@ -27,9 +27,6 @@
 	var setEventHandlers = function() {
 		io.sockets.on("connection", function(data){
 			onSocketConnection(data);
-			data.on("new:connection",function(a){
-				io.emit("list:game",{games: games, size: games.length});
-			})
 		});
 	};
 
@@ -46,7 +43,7 @@
 
 			// Broadcast new player to connected socket clients
 			this.broadcast.emit("new:player",{id: newPlayer.id, x: newPlayer.x, y: newPlayer.y,avatar: newPlayer.avatar});
-
+			this.emit("list:game",{games: games, size: games.length});
 			// Send existing players to the new player
 			var i, existingPlayer;
 			for (i = 0; i < players.length; i++) {
@@ -68,8 +65,8 @@
 
 
 		});
-		client.on("update:players", function (data){
-
+		client.on("update:player", function (data){
+			this.broadcast.emit("update:Player",{x: data.x , y: data.y});
 		});
 	};
 	

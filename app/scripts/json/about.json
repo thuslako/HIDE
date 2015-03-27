@@ -1,0 +1,32 @@
+[
+	{	"pic": "/assets/me.jpg",
+		"name": "Lukundu Lako",
+		"role": "Scrum master & Team member",
+		"about": "active programmer and creative"
+	},
+	{
+		"pic": "/assets/wil.jpg",
+		"name": "Wilson Yeung",
+		"role": "Part-product onwer & Team member",
+		"about": "Illustrator"
+	},
+	{
+		"pic": "/assets/brad.jpg",
+		"name": "Brad Campbell",
+		"role": "Part-product onwer & Team member",
+		"about": "Web developer"
+	},
+	{
+		"pic": "/assets/lin.jpg",
+		"name": "Linford Lin Lin Lo",
+		"role": "Team member",
+		"about": "Illustrator"
+	},
+	{
+		"pic": "/assets/yu.jpg",
+		"name": "YuFeng Yao",
+		"role": "Team member",
+		"about": "Illustrator"
+	}
+
+]

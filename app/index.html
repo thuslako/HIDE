@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="styles/main.css">
 	<link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
     <!-- endbuild -->
-    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/jquery/dist/jquery.js"></script>
     <script src="/phaser/build/phaser.min.js"></script>
     <script src="/angular/angular.js"></script>
     
@@ -36,13 +36,13 @@
     <!-- Add your site or application content here -->
     <div class="container">
       <div class="header">
-        <ul class="nav nav-pills pull-right">
+        <ul id="nav">
           <li class="active"><a ng-href="#">Home</a></li>
           <li><a ng-href="#/about">About</a></li>
           <li><a ng-href="#">Contact</a></li>
 		      <li><a ng-href="#/game">Game</a></li>
         </ul>
-        <h3 class="text-muted">hide</h3>
+       <h1 id="name">HIDE</h1>
       </div>
 
       <div ng-view=""></div>
@@ -81,6 +81,8 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="scripts/app.js"></script>
+    <script src="scripts/services/about.js"></script>
+    
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/about.js"></script>
     <script src="scripts/controllers/game.js"></script>

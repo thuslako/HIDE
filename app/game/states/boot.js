@@ -1,6 +1,8 @@
 var Hide = {
 	music : false, 
-	characterid : null,
+	games : [],
+	players : [],
+	userdata : null,
 	
 };
 

@@ -1,1 +1,13 @@
-<p>This is the about view.</p>
+<div ng-controller='AboutCtrl'>
+	<ul class='team'>
+		<div id='about' ng-repeat='member in members'>
+			<li class='person'>
+				<img class="img-circle" ng-src="{{member.pic}}"/>
+				<h3>{{member.name}}</h3>
+				<h5>{{member.role}}</h5>
+				<p>{{member.about}}</p>
+
+			</li>
+		</div>
+	</ul>
+</div>

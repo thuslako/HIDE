@@ -8,10 +8,10 @@
  * Controller of the hideApp
  */
 angular.module('hideApp')
-  .controller('AboutCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+  .controller('AboutCtrl', function ($scope,membersServ) {
+  	var promise = membersServ.getMembers();
+  	promise.then(function(data) {
+    	$scope.members = data.data;
+  	})
+
+ });
