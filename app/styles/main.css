@@ -41,12 +41,12 @@ body {
   display: block;
   margin: 0 auto;
   width: 100%;
-  min-height: 800px;
+  min-height: 1000px;
 }
 
 .person {
   float: left;
-  padding: 30px;
+  padding: 20px;
   margin: 0 auto; 
   list-style: none;
   display: inline-block;

@@ -1,85 +1,106 @@
 //player
-
-Hide.Player = function(id,x,y,avatar,game) {
-		this.id = id;
-		this.x = x;
-		this.y = y;
-		this.sel = avatar;
-		this.itplayer = false;
-		this.trys = 3; 
+	var Player = function(config) {
+		this.gameid = config.gameid || -1; 
+		this.id = config.id || '';
+		this.x = 0;
+		this.y = 0;
+		this.avatar = config.avatar || '';
+		console.log(config.avatar);
 		this.score = 0; 
 		this.hidden = false; 
 		this.lastUpdate =  0;
-		this.avatar = null;
-		this.speech = null;
+		this.player = null;
 		this.cursors = null;
-		this.mouse = null;
-		this.tween = null;
+		this.tween = null; 
 		this.socket = io(); 
-		this.game = game;
+		this.game =config.game;
 	 
 	}
-	Hide.Player.prototype = {
+	
+	Player.prototype = {
 		create: function(){
-			this.avatar = this.game.add.sprite(this.x,this.y,this.sel);
-			this.game.physics.arcade.enable([this.avatar]);
+			this.player = this.game.add.sprite(this.x,this.y,this.avatar);
+			this.game.physics.arcade.enable([this.player]);
+			this.player.anchor.setTo(0.5, 0.5);
+		    this.player.body.bounce.y = 0.2;
+		    this.player.body.gravity.y = 600;
+		    this.player.body.collideWorldBounds = true;
 
-			this.avatar.anchor.setTo(0.5, 0.5);
-	    	this.avatar.body.bounce.y = 0.2;
-	    	this.avatar.body.gravity.y = 600;
-	    	this.avatar.body.collideWorldBounds = true;
-
-			this.avatar.animations.add('left', [0], 3, true);
-		    this.avatar.animations.add('right', [2], 3, true);
-
-		    this.cursors = this.game.input.keyboard.createCursorKeys();
-		    this.mouse = this.game.input.mouse.button = 0;
-		    this.tween = this.game.add.tween(this.avatar);
+			this.cursors = this.game.input.keyboard.createCursorKeys();
+			
+			this.player.animations.add('left', [0], 3, true);
+			this.player.animations.add('right', [2], 3, true);
+			
+			
+		    this.tween = this.game.add.tween(this.player);
 		    this.tween.to({angle:'+5'},100);
-		    this.tween.to({angle:'-6'},100);
+		    this.tween.to({angle:'-6'},80);
 		    this.tween.to({angle:'+7'},100);
 		    this.tween.to({angle:'-6'},80);
+
 		},
 		input: function ()  {
-			//check if player is hidden if not player can move otherwise player can't move 
 			if(!this.hidden){
-				// if(this.game.input.mouse.button == 0 ){
-			 //    	console.log('clicked left');
-				// }
-				this.avatar.body.velocity.x = 0;
-				
+				this.player.body.velocity.x = 0; 
 			    if (this.cursors.left.isDown)
 			    {
-			        //  Move to the left
-			        this.avatar.body.velocity.x = -150;
-			        this.avatar.animations.play('left');
-			        this.tween.start();
+					this.animPlayer('left',true);
+					this.player.body.velocity.x = -150;
 			    }
-				else if (this.cursors.up.isDown || this.avatar.body.touching.down)
-	    		{
-	        		this.avatar.body.velocity.y = -350;
-	    		}
 			    else if (this.cursors.right.isDown)
 			    {
-			        //  Move to the right
-			       this.avatar.body.velocity.x = 150;
-			       this.avatar.animations.play('right');
-			       this.tween.start();
+					this.animPlayer('right',true);
+					this.player.body.velocity.x = 150;
 			    }
+				else if (this.cursors.up.isDown)
+	    		{
+					this.animPlayer('up',true);
+					this.player.body.velocity.y = -350; 
+	    		}
 			    else
 			    {
-			        //  Stand still
-			        this.avatar.animations.stop();
-			        this.avatar.frame = 1;
-			    }
-				
-				
-
+					this.animPlayer('',false); 
+			    }				
 			}		
 		},
-		kill: function () {
-			this.avatar.kill();
+		animPlayer: function (dir,toggle){
+			if(toggle){	
+				this.player.animations.play(dir);
+				this.socket.emit('update:player',{ posX:this.player.position.x, posY: this.player.position.y,dir: dir});
+				this.tween.start();
+				return;
+			}
+			else{
+				this.socket.emit('update:player',{ posX:this.player.position.x, posY: this.player.position.y,dir: ''});
+				this.player.animations.stop();
+				this.player.frame = 1;
+				return;
+			}
+		},
+		killPlayer: function () {
+			this.player.kill();
+		},
+		updatePlayer: function (data){
+			
+			this.player.body.velocity.y = 0; 
+
+			if(data.dir == 'right' || data.dir == 'left'){
+				this.tween.start();
+				this.player.position.x = data.posX;
+				this.player.animations.play(data.dir);
+			}
+			else if(data.dir == 'up'){
+				this.player.body.velocity.y = -350; 
+			}
+			else{
+				this.player.animations.stop();
+				this.player.frame = 1;
+			}
+
+	
 		}
+
+
 
 
 };

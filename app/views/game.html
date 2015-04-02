@@ -4,11 +4,12 @@
                function Game() {}
                 Game.prototype = {
                     start: function() {
+                      var socket = io();
                       var game = new Phaser.Game(600,400, Phaser.AUTO,'game');
                       game.state.add('boot', Hide.Boot);
                       game.state.add('preload', Hide.Preloader);
                       game.state.add('lobby', Hide.Lobby);
-                      game.state.add('game', Hide.Game);
+                      game.state.add('game', Hide.LevelManager);
                       game.state.start('boot');
                     }
                 };

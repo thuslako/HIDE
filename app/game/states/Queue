@@ -1,81 +1,56 @@
-Hide.Queue = function (game) {
-	this.socket = io();
-	this.game = game;
-	this.i = -120;
-	this.selected = false;
-};
-
-Hide.Queue.prototype  = {
-
-
-	preload : function () {
-		this.game.load.script('gray', 'https://cdn.rawgit.com/photonstorm/phaser/master/filters/Gray.js');
-		
-		this.selectGroup = this.add.group();
-		this.selectedGroup = this.add.group();
-		
-		this.select('fed');
-		this.select('joe');
-		this.select('kim');
-		this.select('hit');
-		this.select('bin');	
-	},
-	create : function () {
-	  this.style = { font: '65px Arial', fill: '#ffffff', align: 'center'};
-      this.titleText = this.game.add.text(this.game.world.centerX, 50, 'HIDE!', this.style);
-      	this.titleText.anchor.setTo(0.5, 0.5);
-
-      this.gameInput = this.game.add.text(this.game.world.centerX, 150, 'Select one of the character below ', { font: '16px Arial', fill: '#ffffff', align: 'center'});
-      	this.gameInput.anchor.setTo(0.5, 0.5);
-
-      this.msg = this.socket.on('new:connection', function(data){ return data;});
-	  	this.countText = this.game.add.text(this.game.world.centerX, 310, this.msg.id + ' is online!',  { font: '12px Arial', fill: '#71BF40', align: 'center'});
-  	  		this.countText.anchor.setTo(0.5, 0.5);
-
-  	  this.newGameText = this.game.add.text(this.game.world.centerX, 380,'start new game',  { font: '12px Arial', fill: '#71BF40', align: 'center'});
-  	  	this.newGameText.anchor.setTo(0.5, 0.5);
-  	  		this.newGameText.inputEnabled = true;
-	  
-	},
-	update : function () {
-		this.socket.on('start:game',this.startgame);
-	},
-	characterSelec : function (sprite, pointer) {
-		if(!this.selected){
-			this.selectedGroup.add(sprite);
-			this.selectGroup.remove(sprite);
-
-			var gray = this.game.add.filter('Gray');
-			this.selectGroup.filters = [gray];
-			this.selectGroup.forEach(function(character) {
-				character.inputEnabled = false;
-			});
-
-			Hide.characterid = {x:50,y:100,avatar: sprite.key};
-			this.socket.emit('new:player',{x:50,y:100,avatar: sprite.key});
-			this.state.start('game');
-			this.selected = true;
+	function disconnected(){
+		var playerIndex  = playerById(this.id);
+		if(!playerIndex){
+			console.log("Player not found  by this id:"+ this.id);
+			return; 
 		}
-		else{
-			this.selected = false;
-			this.selectGroup.add(sprite);
-			this.selectedGroup.remove(sprite);
-			this.selectGroup.filters = [null];
-			this.selectGroup.forEach(function(character) {
-				character.inputEnabled = true;
-			});
-		}
-	},
-	select: function(avatar){
-		this.character = this.add.sprite( this.game.world.centerX+(this.i), 200, avatar);
-			this.character.anchor.setTo(0.5, 0.5);
-				this.character.inputEnabled = true;		
-					this.character.events.onInputDown.add(this.characterSelec, this);
-						this.selectGroup.add(this.character);
-							this.i= this.i+60;		
-	},
-	startgame: function (){
-		this.state.start('game');
-	}
+		players.splice(players.indexOf(playerIndex),1);
+		console.log('this player has been removed: '+ this.id);
 
-};
+	};
+	function initPlayer(data){
+		console.log('this init');
+		this.emit("init:update",{id: this.id, x: data.x, y: data.y, gameid: '' , avatar: data.avatar});
+		this.emit("list:game",games);
+	};
+
+	function addToGame (data) {
+		var player = playerById(data.id);
+
+		if(player.gameid === ''){
+			player.gameid = data.gameid;
+			this.broadcast.emit("addToGame:player", data)
+		}
+		console.log('returned value for current player map: '+ player.map);
+	};
+
+	function newPlayer (data){
+		var player = playerById(data.id);
+
+		if(!player){
+			console.log('player is not found with this id: '+this.id);
+		}
+		if(!data.gameId){
+			console.log('game not found under game list');
+		}
+
+		var newPlayer = { id: this.id, x: data.x, y: data.y, gameid: data.gameId , avatar: data.avatar};
+		this.broadcast.emit("new:player",{id: newPlayer.id, x: newPlayer.x, y: newPlayer.y, gameid: newPlayer.gameId , avatar: newPlayer.avatar});
+		
+
+		var existingPlayer;
+		for (var i = 0; i < players.length; i++) {
+			existingPlayer = players[i];
+			this.emit("new:player", {id: existingPlayer.id, x: existingPlayer.x, y: existingPlayer.y,avatar: existingPlayer.avatar});
+		};
+
+		// Add new player to the players array if they aren't in players array 
+		if(!player)
+			players.push(newPlayer);
+	};
+
+	function updatePlayer(data){
+		//updates players movement and status throughout game. 
+		console.log(data.id + ' has been updated : '+ data);
+		this.broadcast.emit("update:player",data);
+	};
