@@ -1,9 +1,10 @@
 var Item = function(build){
-	this.obj = build.obj || 'level_knight';
+	this.obj = build.obj;
 	this.x = build.x;
 	this.y = build.y;
 	Hide.game = build.game;
 	this.iteam,
+	this.player,
 	this.msgtooltip,
 	this.newTool,
 	this.closeTool,
@@ -32,7 +33,7 @@ Item.prototype.create = function () {
 	this.msgtext.alpha = 0; 
 	this.msgtext.align = 'center';
 
-	this.showTooltip('Hide here!',5);
+	this.showTooltip('Hide here!',30);
 };
 
 Item.prototype.showTooltip = function (msg,delay) {

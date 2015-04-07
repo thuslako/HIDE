@@ -33,7 +33,7 @@ var setEventHandlers = function() {
 
 
 		socket.on("update:player", updatePlayer);
-		socket.on("update:items", updateItemsList);
+		socket.on("update:item", updateItemsList);
 		socket.on("addToQueue:player", addToQueue);
 		socket.on("disconnect", disconnected);
 	});
@@ -73,7 +73,7 @@ function addToQueue (data){
 	player.avatar = data.avatar;
 	console.log(rand);
 	if(rand == 2){
-	  player.status = 'it';
+	  player.status = 2;
 	}
 	this.emit("user:queue",player);
 	this.broadcast.emit("current:queue",player);
@@ -92,7 +92,9 @@ function updatePlayer(data){
 
 
 function updateItemsList(data){
-	//keeps track of where the players are hidding
+	console.log(data);
+	console.log(data.key)
+	this.broadcast.emit("update:items",data);
 };
 
 //helper functions 

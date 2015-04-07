@@ -11,10 +11,9 @@ Hide.Queue.prototype.create = function (){
 	Hide.socket.on('current:queue',function(data){ 
 		Hide.listPlayers(data);
 		if(Hide.i==2){
-			if(Hide.player.status == 'it'){ 
-				Hide.timer = 30;
-				this.titleText = Hide.game.add.bitmapText(Hide.game.world.centerX-35,Hide.game.world.centerY-65,'carrier','You are it!', 12);
-				console.log('player is it');
+			if(Hide.player.status == 2){ 
+				Hide.timer = 5;
+				this.titleText = Hide.game.add.bitmapText(Hide.game.world.centerX-45,Hide.game.world.centerY-65,'carrier','You are it!', 12);
 			}
 			Hide.game.world.remove(this.ready);
 			Hide.countTimer = Hide.game.time.events.loop(Phaser.Timer.SECOND,Hide.updateTimer);

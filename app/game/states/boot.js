@@ -11,6 +11,7 @@ var Hide = {
 Hide.Boot = function(game){
 	Hide.game = game;
 	Hide.socket = io();
+	Hide.games = null;
 };
 
 Hide.Boot.prototype.init = function () {
