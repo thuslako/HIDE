@@ -1,3 +1,0 @@
-function onNewPlayer(data) {
-
-};

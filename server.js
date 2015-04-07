@@ -4,7 +4,9 @@ var express = require("express"),
  		app = express(),
  	 server = require('http').createServer(app),
 	players = [],
-	  games = ['hey'],
+	  items = [],
+	  games = ['Demo Game'],
+	   rand = 0,
 	 	 io = require('socket.io')(server);
 		 
 server.listen(process.env.PORT || 8000,function (client) {
@@ -25,12 +27,14 @@ app.get('/*', function(req, res){
 var setEventHandlers = function() {
 	io.sockets.on("connection",function onconnection (socket){
 
-		socket.emit("connected", {id: socket.id}); 
-		players.push({id: socket.id, x: 0, y: 0, gameid: '' , avatar: ''});
-		socket.emit("list:game",{list: games, length: games.length});
+		socket.emit("connected", {id: socket.id, games: games}); 
+		players.push({id: socket.id, x: 0, y: 0, gameid: null , avatar: '',status:''});
+		console.log('added :'+socket.id);
+
+
 		socket.on("update:player", updatePlayer);
-		socket.on("addToGame:player", addToGame);
-		socket.on("new:player", newPlayer);
+		socket.on("update:items", updateItemsList);
+		socket.on("addToQueue:player", addToQueue);
 		socket.on("disconnect", disconnected);
 	});
 };
@@ -42,49 +46,53 @@ function disconnected(){
 		console.log("Player not found  by this id:"+ this.id);
 		return; 
 	}
+
 	players.splice(players.indexOf(playerIndex),1);
 	console.log('this player has been removed: '+ this.id);
-
 };
 
-function addToGame (data) {
+function addToQueue (data){
+	 rand = Math.floor((Math.random() * 2) + 1);
+	//takes all players with going into the same game and sync their game
+	//makes on person it, ensure there's the right amount of people there
+	//updates if people leave queue
 	var player = playerById(data.id);
 
-	if(player.gameid === ''){
-		player.gameid = data.gameid;
-		this.broadcast.emit("addToGame:player", data)
-	}
-	console.log('returned value for current player map: '+ player.map);
-};
-
-function newPlayer (data){
-	console.log(data)
-;	var player = playerById(data.id);
-
 	if(!player){
-
-		console.log('player is not found with this id: '+this.id);
-	}
-	if(!data.gameId){
-		console.log(data + ' this');
-		console.log('game not found under game list');
+		console.log('no player by id: '+ data.id);
+		return;
 	}
 
-	var newPlayer = { id: this.id, x: data.x, y: data.y, gameid: data.gameId , avatar: data.avatar};
-	this.broadcast.emit("new:player",{id: newPlayer.id, x: newPlayer.x, y: newPlayer.y, gameid: newPlayer.gameId , avatar: newPlayer.avatar});
-	
+	var checkname = mapidByName(data.gameid);
+	if(!checkname){
+		console.log('no game by that id: '+ data.gameid);
+		return;
+	}
 
-	var existingPlayer;
+	player.gameid = data.gameid;
+	player.avatar = data.avatar;
+	console.log(rand);
+	if(rand == 2){
+	  player.status = 'it';
+	}
+	this.emit("user:queue",player);
+	this.broadcast.emit("current:queue",player);
 	for (var i = 0; i < players.length; i++) {
-		existingPlayer = players[i];
-		this.emit("new:player", {id: existingPlayer.id, x: existingPlayer.x, y: existingPlayer.y,avatar: existingPlayer.avatar});
+		if((players[i].id != player.id) && (players[i].gameid == player.gameid)) {
+			this.emit("current:queue",players[i]);
+			this.broadcast.emit("update:player",players[i]);
+		}
 	};
 };
 
 function updatePlayer(data){
 	//updates players movement and status throughout game. 
-	console.log(data.id + ' has been updated : '+ data);
 	this.broadcast.emit("update:player",data);
+};
+
+
+function updateItemsList(data){
+	//keeps track of where the players are hidding
 };
 
 //helper functions 
@@ -97,6 +105,14 @@ function playerById(id) {
 	return false;
 };
 
+function mapidByName(name){
+	for (var i = 0; i < games.length; i++){
+		if (games[i] == name){
+			return true;
+		}
+	}
+	return false;
+};
 
 
 
