@@ -92,7 +92,7 @@ Hide.LevelManager.prototype.create = function () {
 	Hide.box2.item.events.onInputDown.add(function(){ this.logic(Hide.box2); }, this);
 
 	for(var i=1;i < Hide.players.length; i++){
-		if(Hide.player.status == 2){
+		if(Hide.local.status == 2){
 			Hide.remote = Hide.remote= new Player({id:Hide.players[i].id, xpos: 1500, gameid: Hide.players[i].gameid, avatar: Hide.players[i].avatar,game: Hide.game,status: Hide.players[i].status}); 
 			Hide.remote.create();
 			Hide.game.physics.arcade.enable([Hide.remote.player]);
@@ -100,7 +100,7 @@ Hide.LevelManager.prototype.create = function () {
 			Hide.socket.on("start:timer",trigTimer);
 		}
 		else{
-			Hide.remote = Hide.remote= new Player({id:Hide.players[i].id, gameid: Hide.players[i].gameid, avatar: Hide.players[i].avatar,game : Hide.game, status: Hide.players[i].status}); 
+			Hide.remote = Hide.remote= new Player({id:Hide.players[i].id, xpos: 1500,gameid: Hide.players[i].gameid, avatar: Hide.players[i].avatar,game : Hide.game, status: Hide.players[i].status}); 
 			Hide.remote.create();
 			Hide.game.physics.arcade.enable([Hide.remote.player]);
 		}
@@ -123,7 +123,7 @@ Hide.LevelManager.prototype.create = function () {
 
 	Hide.countDownText = Hide.game.add.bitmapText(0,0,'carrier',Hide.gametimer,12);
 	Hide.countDownText.fixedToCamera = true;
-
+	
 	Hide.socket.on("update:items",function (data){
 		return updateItem(data);
 	});
@@ -231,13 +231,13 @@ function updateItem (data){
 			break;
 		case "level_bookshelf_1":
 			if(Hide.local.status == 2){
-				Hide.bookshelf_1.player = data.player;
+				Hide.bookshelf1.player = data.player;
 				Hide.remote.status = data.status;
 				Hide.remote.updateHidding();
 				Hide.remote.updateHidding();
 			}
 			else{
-				Hide.bookshelf_1.player = data.player;
+				Hide.bookshelf1.player = data.player;
 				Hide.local.status = data.status;
 				Hide.local.updateHidding();
 				Hide.local.updateHidding();
@@ -245,13 +245,13 @@ function updateItem (data){
 			break;
 		case "level_bookshelf_2":
 			if(Hide.local.status == 2){
-				Hide.bookshelf_2.player = data.player;
+				Hide.bookshelf2.player = data.player;
 				Hide.remote.status = data.status;
 				Hide.remote.updateHidding();
 				Hide.remote.updateHidding();
 			}
 			else{
-				Hide.bookshelf_2.player = data.player;
+				Hide.bookshelf2.player = data.player;
 				Hide.local.status = data.status;
 				Hide.local.updateHidding();
 				Hide.local.updateHidding();
@@ -287,5 +287,3 @@ function updateItem (data){
 			break;
 	}
 };
-
-

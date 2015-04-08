@@ -67,7 +67,6 @@ function addToQueue (data){
 
 	player.gameid = data.gameid;
 	player.avatar = data.avatar;
-	 player.status = 1;
 	console.log(rand);
 	if(rand == 2){
 	  player.status = 2;
