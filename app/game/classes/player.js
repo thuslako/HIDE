@@ -37,10 +37,14 @@
 		    this.tween.to({angle:'-6'},80);
 		    this.tween.to({angle:'+7'},100);
 		    this.tween.to({angle:'-6'},80);
+		    if(this.status == 3){
+		    	this.Player.alpha = 0; 
+		    }
 
 		},
 		input: function ()  {
 			if(this.status != 3){
+				this.player.alpha = 1; 
 				this.player.body.velocity.x = 0; 
 			    if (this.cursors.left.isDown)
 			    {
@@ -96,6 +100,14 @@
 			this.player.animations.stop();
 			this.player.frame = 1;
 			return;
+		},
+		updateHidding: function (){
+			if(this.status == 1 || this.status == 2){
+				this.player.alpha = 1;
+			}
+			else if(this.status == 3){
+				this.player.alpha = 0; 
+			} 
 		}
 
 
