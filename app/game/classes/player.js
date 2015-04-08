@@ -102,12 +102,12 @@
 			return;
 		},
 		updateHidding: function (){
-			if(this.status == 1 || this.status == 2){
-				this.player.alpha = 1;
-			}
-			else if(this.status == 3){
+			if(this.status == 3){
 				this.player.alpha = 0; 
 			} 
+			else{
+				this.player.alpha = 1;
+			}
 		}
 
 

@@ -26,14 +26,14 @@ Item.prototype.create = function () {
 	this.msgtooltip.scale.setTo(1.3,1.3);
 	this.msgtooltip.alpha = 0; 
 
-	this.newTool = this.msgtooltip.animations.add('msg-tool-open',[0,1,2]);
-	this.closeTool = this.msgtooltip.animations.add('msg-tool-close',[2,1,0]);
+	this.newTool = this.msgtooltip.animations.add('msg-tool-open',[1,2]);
+	this.closeTool = this.msgtooltip.animations.add('msg-tool-close',[2,1]);
 
 	this.msgtext= Hide.game.add.bitmapText(this.x-25,this.y-90,'carrier',this.message,5);
 	this.msgtext.alpha = 0; 
 	this.msgtext.align = 'center';
 
-	this.showTooltip('Hide here!',30);
+	this.showTooltip('Hiding\n\n spot!',30);
 };
 
 Item.prototype.showTooltip = function (msg,delay) {
@@ -46,18 +46,10 @@ Item.prototype.showTooltip = function (msg,delay) {
 	},this);
 
 	Hide.game.time.events.add(Phaser.Timer.SECOND * delay, function(){
+		this.msgtext.alpha = 0;
 		this.msgtooltip.animations.play('msg-tool-close');
 		this.msgtooltip.alpha = 0; 
-		this.msgtext.alpha = 0;
+
 	},this);
 };
 
-Item.prototype.closeTooltip = function (msg) {
-	this.msgtooltip.animations.play('msg-tool-close');
-		
-		this.closeTool.onComplete.add(function(){
-			this.msgtooltip.alpha =1;
-		},this);
-
-		this.msgtext.alpha = 0;
-};
