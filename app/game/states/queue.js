@@ -2,7 +2,7 @@ Hide.Queue = function (game){
 	Hide.players = [];
 	Hide.i = 1; 
 	Hide.j = 25;
-	Hide.timer = 5;
+	Hide.timer = 10;
 };
 
 Hide.Queue.prototype.create = function (){
@@ -12,7 +12,7 @@ Hide.Queue.prototype.create = function (){
 		Hide.listPlayers(data);
 		if(Hide.players.length ==2){
 			if(Hide.player.status == 2){ 
-				Hide.timer = 5;
+				Hide.timer = 15;
 				this.titleText = Hide.game.add.bitmapText(Hide.game.world.centerX-45,Hide.game.world.centerY-65,'carrier','You are it!', 12);
 			}
 			Hide.game.world.remove(this.ready);
