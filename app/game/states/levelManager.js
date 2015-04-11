@@ -75,7 +75,7 @@ Hide.LevelManager.prototype.create = function () {
 
 	// this.piano = new Item({obj: 'level_piano',game: Hide.game, x: 2380, y: 360});
 	// this.piano.create();
-	Hide.local = new Player({id:Hide.player.id, gameid: Hide.player.gameid, avatar: Hide.player.avatar,game : Hide.game, status: 1});
+	Hide.local = new Player({id:Hide.player.id, gameid: Hide.player.gameid, avatar: Hide.player.avatar,game : Hide.game, status: Hide.player.status});
 	Hide.local.create();
 	Hide.game.physics.arcade.enable([Hide.local.player]);
 	Hide.game.camera.follow(Hide.local.player);
@@ -121,7 +121,7 @@ Hide.LevelManager.prototype.create = function () {
 	this.pillar.scale.setTo(0.5, 0.52);
 	this.pillar.anchor.setTo(0.5, 0.5);
 
-	Hide.countDownText = Hide.game.add.bitmapText(0,0,'carrier',Hide.gametimer,12);
+	Hide.countDownText = Hide.game.add.bitmapText(Hide.game.world.centerX,Hide.game.world.centerY,'carrier',Hide.gametimer,12);
 	Hide.countDownText.fixedToCamera = true;
 	
 	Hide.socket.on("update:items",function (data){
@@ -136,17 +136,18 @@ Hide.LevelManager.prototype.update = function () {
 	});
 };
 Hide.LevelManager.prototype.logic = function (item){
-
-		if(Hide.local.status == 1){
-			console.log('Hide player');
+		console.log(item);
+		if(Hide.local.status == 1 && !item.player){
 			Hide.local.player.alpha = 0;
 			item.showTooltip('you are\n\n safe!',5);
-			item.player = Hide.local.id;
+			item.player = true;
 			Hide.local.status = 3;
 			Hide.socket.emit("update:item",{key: item.obj, player:true, status: 3});
 		}
+		else if(Hide.local.status == 1 && item.player){
+			item.showTooltip('find\n\n another spot!',5);
+		}
 		else if(Hide.local.status == 2){ 
-			console.log('Looking for player');
 			if(!item.player){
 				item.showTooltip('no one\n\n here!',5);
 			}
@@ -192,12 +193,10 @@ function updateItem (data){
 				Hide.fireplace.player = data.player;
 				Hide.remote.status = data.status;
 				Hide.remote.updateHidding();
-				Hide.remote.updateHidding();
 			}
 			else{
 				Hide.fireplace.player = data.player;
 				Hide.local.status = data.status;
-				Hide.local.updateHidding();
 				Hide.local.updateHidding();
 			}
 			break;
@@ -206,12 +205,10 @@ function updateItem (data){
 				Hide.curtain_1.player = data.player;
 				Hide.remote.status = data.status;
 				Hide.remote.updateHidding();
-				Hide.remote.updateHidding();
 			}
 			else{
 				Hide.curtain_1.player = data.player;
 				Hide.local.status = data.status;
-				Hide.local.updateHidding();
 				Hide.local.updateHidding();
 			}
 			break;
@@ -220,12 +217,10 @@ function updateItem (data){
 				Hide.knight.player = data.player;
 				Hide.remote.status = data.status;
 				Hide.remote.updateHidding();
-				Hide.remote.updateHidding();
 			}
 			else{
 				Hide.knight.player = data.player;
 				Hide.local.status = data.status;
-				Hide.local.updateHidding();
 				Hide.local.updateHidding();
 			}
 			break;
@@ -234,12 +229,10 @@ function updateItem (data){
 				Hide.bookshelf1.player = data.player;
 				Hide.remote.status = data.status;
 				Hide.remote.updateHidding();
-				Hide.remote.updateHidding();
 			}
 			else{
 				Hide.bookshelf1.player = data.player;
 				Hide.local.status = data.status;
-				Hide.local.updateHidding();
 				Hide.local.updateHidding();
 			}
 			break;
@@ -248,12 +241,10 @@ function updateItem (data){
 				Hide.bookshelf2.player = data.player;
 				Hide.remote.status = data.status;
 				Hide.remote.updateHidding();
-				Hide.remote.updateHidding();
 			}
 			else{
 				Hide.bookshelf2.player = data.player;
 				Hide.local.status = data.status;
-				Hide.local.updateHidding();
 				Hide.local.updateHidding();
 			}
 			break;
@@ -261,7 +252,6 @@ function updateItem (data){
 			if(Hide.local.status == 2){
 				Hide.box.player = data.player;
 				Hide.remote.status = data.status;
-				Hide.remote.updateHidding();
 				Hide.remote.updateHidding();
 			}
 			else{
@@ -276,12 +266,10 @@ function updateItem (data){
 				Hide.box2.player = data.player;
 				Hide.remote.status = data.status;
 				Hide.remote.updateHidding();
-				Hide.remote.updateHidding();
 			}
 			else{
 				Hide.box2.player = data.player;
 				Hide.local.status = data.status;
-				Hide.local.updateHidding();
 				Hide.local.updateHidding();
 			}
 			break;

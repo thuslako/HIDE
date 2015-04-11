@@ -11,7 +11,7 @@ var Hide = {
 Hide.Boot = function(game){
 	Hide.game = game;
 	Hide.socket = io();
-	Hide.games = null;
+	Hide.games = [];
 };
 
 Hide.Boot.prototype.init = function () {
@@ -28,7 +28,6 @@ Hide.Boot.prototype.init = function () {
 Hide.Boot.prototype.preload = function (){
 	this.load.image('logo','./assets/take2.png',100,100);
 	this.load.image('bar','./assets/loadBar.png',200,10);
-	// this.load.bitmapFont('carrier','./assets/fonts/carrier_command.png','./assets/fonts/carrier_command.xml');
 };
 
 Hide.Boot.prototype.create = function () {
@@ -46,6 +45,5 @@ Hide.Boot.prototype.updateId = function (data) {
 function connected (data){
 	Hide.player.id = data.id;
 	Hide.games = data.games;
-	// console.log(Hide.player);
-	console.log('there are'+Hide.games);
+	console.log('there are'+Hide.games.length+ 'games to play');
 };

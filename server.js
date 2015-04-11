@@ -45,6 +45,15 @@ function disconnected(){
 
 	players.splice(players.indexOf(playerIndex),1);
 	console.log('this player has been removed: '+ this.id);
+
+	this.emit("disconnected:player",playerIndex);
+	this.broadcast.emit("disconnected:player",playerIndex);
+
+	for (var i = 0; i < players.length; i++) {
+			this.emit("current:queue",players[i]);
+			this.broadcast.emit("update:player",players[i]);
+	};
+
 };
 
 function addToQueue (data){
@@ -71,11 +80,12 @@ function addToQueue (data){
 	if(rand == 2){
 	  player.status = 2;
 	}
+
+	players[0]= player;
 	this.emit("user:queue",player);
 	this.broadcast.emit("current:queue",player);
 	for (var i = 0; i < players.length; i++) {
 		if((players[i].id != player.id) && (players[i].gameid == player.gameid)) {
-			this.emit("current:queue",players[i]);
 			this.broadcast.emit("update:player",players[i]);
 		}
 	};
