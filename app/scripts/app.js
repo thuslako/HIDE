@@ -18,7 +18,7 @@ angular
     'ngTouch'
   ]
 )
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider,$locationProvider) {
     $routeProvider
       .when('/main', {
         templateUrl: 'views/main.html',
@@ -34,5 +34,10 @@ angular
       })
       .otherwise({
         redirectTo: '/main'
+      });
+
+    $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
       });
   });
