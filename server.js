@@ -1,12 +1,12 @@
 var express = require("express"),
-	   path = require("path"),
+	  path = require("path"),
  		app = express(),
- 	 server = require('http').createServer(app),
-	players = [],
+ 	 	server = require('http').createServer(app),
+		players = [],
 	  items = [],
 	  games = ['Demo Game'],
-	   rand = 1,
-	 	 io = require('socket.io')(server);
+	  rand = 1,
+	 	io = require('socket.io')(server);
 		 
 server.listen(process.env.PORT || 8000,function (client) {
 	console.log('connect and ready on port 8000');
@@ -19,7 +19,7 @@ app.use(express.static(indexPath));
 app.use(express.static(staticPath));
 app.get('/*', function(req, res){
 	var file = req.params[0];
-	res.sendfile(path.join(indexPath, file));
+	res.sendFile(path.join(indexPath, '/index.html'));
 });
 
 var setEventHandlers = function() {

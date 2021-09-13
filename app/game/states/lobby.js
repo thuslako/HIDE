@@ -6,6 +6,11 @@ Hide.Lobby = function (game) {
 	this.confetti = null;
 	this.selected = false;
 };
+
+Hide.Lobby.prototype.preload = function(){
+	Hide.game.load.script('gray', 'https://cdn.rawgit.com/photonstorm/phaser-ce/master/filters/Gray.js');
+};
+
 Hide.Lobby.prototype.create = function () {
 	this.selectGroup = this.add.group();
 	this.selectedGroup = this.add.group();
